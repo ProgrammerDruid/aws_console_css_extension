@@ -9,16 +9,33 @@ It is a single stylesheet that Firefox injects on `*.console.aws.amazon.com` (an
 
 ## Install
 
-### 1. Get the code
+### The quick way: signed package
+
+1. Download the latest `.xpi` from the [releases page](https://github.com/ProgrammerDruid/aws_console_css_extension/releases) using Firefox
+2. Firefox asks whether to add the extension. Click **Add**
+3. Reload any open console tabs
+
+The package is signed by Mozilla, so it stays installed across restarts. It does not contain the font; it loads Amazon Ember from AWS's own CDN.
+
+### From source
 
 ```sh
 git clone https://github.com/ProgrammerDruid/aws_console_css_extension.git
 cd aws_console_css_extension
 ```
 
-### 2. Get the fonts (optional but recommended)
+Then in Firefox:
 
-Amazon Ember belongs to Amazon, so it is not in this repo. Download it from AWS's public CDN into `fonts/`:
+1. Open `about:debugging#/runtime/this-firefox`
+2. Click **Load Temporary Add-on...**
+3. Pick `manifest.json` from this folder
+4. Reload any open console tabs
+
+A temporary add-on is removed when Firefox closes. To keep it, use the signed package above or sign your own build (see below).
+
+### Optional: bundle the fonts locally
+
+Amazon Ember belongs to Amazon, so it is not in this repo. By default the stylesheet loads it from AWS's public CDN. If you run from source and would rather have a local copy, download it into `fonts/`:
 
 ```powershell
 ./fetch-fonts.ps1
@@ -33,28 +50,21 @@ for f in Lt Rg Bd; do
 done
 ```
 
-If you skip this step, the stylesheet tries to load the same files straight from the CDN instead, which is slower and could be blocked by the console's content security policy.
+## Building and signing your own package
 
-### 3. Load the extension
+Release Firefox only installs packages signed by Mozilla. Signing an unlisted add-on is free and automated:
 
-**Temporary (gone when Firefox restarts):**
+1. Change the `id` in `manifest.json` to something of your own, since each ID can only be registered once
+2. Create API credentials at https://addons.mozilla.org/developers/addon/api/key/
+3. Run:
 
-1. Open `about:debugging#/runtime/this-firefox`
-2. Click **Load Temporary Add-on...**
-3. Pick `manifest.json` from this folder
-4. Reload any open console tabs
+   ```sh
+   npx web-ext sign --channel=unlisted --api-key=<JWT issuer> --api-secret=<JWT secret>
+   ```
 
-**Permanent:** release Firefox only keeps signed extensions. Either:
+The signed `.xpi` lands in `web-ext-artifacts/`. `web-ext-config.mjs` keeps the fonts and repo-only files out of the package.
 
-- Sign it yourself as an unlisted add-on (free, needs an addons.mozilla.org account and API key). Change the `id` in `manifest.json` to something of your own first, since each ID can only be registered once:
-
-  ```sh
-  npx web-ext sign --channel=unlisted --api-key=<jwt issuer> --api-secret=<jwt secret>
-  ```
-
-  Then open the resulting `.xpi` in Firefox.
-
-- Or use Firefox Developer Edition, Nightly or ESR, set `xpinstall.signatures.required` to `false` in `about:config`, zip the folder contents, rename the zip to `.xpi` and install it from `about:addons`.
+`npx web-ext build` makes an unsigned package, which only installs on Firefox Developer Edition, Nightly or ESR with `xpinstall.signatures.required` set to `false` in `about:config`.
 
 ## Customize
 
