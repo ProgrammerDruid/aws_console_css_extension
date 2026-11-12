@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "AWS Console Font Fix",
+  "version": "1.0.0",
+  "description": "Restores the Amazon Ember font and blue, non-underlined links in the AWS Management Console.",
+  "homepage_url": "https://github.com/ProgrammerDruid/aws_console_css_extension",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "aws-console-font-fix@programmerdruid.github.io",
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.console.aws.amazon.com/*",
+        "*://*.console.amazonaws-us-gov.com/*"
+      ],
+      "css": ["fix.css"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": ["fonts/*.woff2"]
+}

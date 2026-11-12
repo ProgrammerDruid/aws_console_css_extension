@@ -1,0 +1,118 @@
+/*
+ * AWS Console Font Fix
+ *
+ * Each @font-face tries, in order:
+ *   1. a copy of Amazon Ember installed on the machine
+ *   2. the copy bundled in fonts/ (see fetch-fonts.ps1)
+ *   3. the copy AWS hosts for its public website
+ * AWS only publishes Light, Regular and Bold; italics are synthesized.
+ *
+ * To use a different font, change the first name in the font-family
+ * rule at the bottom (for example "Segoe UI" or "Inter").
+ */
+
+@font-face {
+  font-family: "Console Fix Ember";
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+  src: local("Amazon Ember Light"), local("AmazonEmber-Light"),
+    url("fonts/AmazonEmber_Lt.woff2") format("woff2"),
+    url("https://a0.awsstatic.com/libra-css/fonts/amazon-ember/AmazonEmber_Lt.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Console Fix Ember";
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local("Amazon Ember"), local("AmazonEmber-Regular"),
+    url("fonts/AmazonEmber_Rg.woff2") format("woff2"),
+    url("https://a0.awsstatic.com/libra-css/fonts/amazon-ember/AmazonEmber_Rg.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Console Fix Ember";
+  font-weight: 500 900;
+  font-style: normal;
+  font-display: swap;
+  src: local("Amazon Ember Bold"), local("AmazonEmber-Bold"),
+    url("fonts/AmazonEmber_Bd.woff2") format("woff2"),
+    url("https://a0.awsstatic.com/libra-css/fonts/amazon-ember/AmazonEmber_Bd.woff2") format("woff2");
+}
+
+/*
+ * The console sets font-family on individual components through CSS
+ * variables with hashed names that change between releases, so override
+ * the property on every element instead. The :not() list keeps
+ * monospace areas (code, editors, terminals) and icon fonts untouched.
+ */
+html,
+body,
+body *:not(
+  pre, pre *,
+  code, code *,
+  kbd, samp, tt,
+  [class*="variant-code"],
+  [class*="variant-pre"],
+  [class*="variant-samp"],
+  [class*="code-view"], [class*="code-view"] *,
+  [class*="code-editor"], [class*="code-editor"] *,
+  [class*="monospace"], [class*="monospace"] *,
+  .ace_editor, .ace_editor *,
+  .cm-editor, .cm-editor *,
+  .CodeMirror, .CodeMirror *,
+  .monaco-editor, .monaco-editor *,
+  .xterm, .xterm *,
+  .fa, .fas, .far, .fab,
+  .glyphicon,
+  .material-icons,
+  [class^="icon-"], [class*=" icon-"]
+) {
+  font-family: "Console Fix Ember", "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif !important;
+}
+
+/*
+ * Links: back to blue with no underline (underline on hover only).
+ * Skips buttons, tabs, menus and the top/side navigation, which were
+ * never styled as blue links.
+ */
+:root {
+  --console-fix-link: #006ce0;
+  --console-fix-link-hover: #002b66;
+}
+
+.awsui-dark-mode {
+  --console-fix-link: #42b4ff;
+  --console-fix-link-hover: #75cfff;
+}
+
+a[href]:not(
+  [class*="button"],
+  [class*="tabs-tab"],
+  [role="tab"],
+  [role="button"],
+  [role="menuitem"],
+  header *,
+  nav *,
+  [id^="awsc-nav"] *,
+  [class*="navigation"] *
+) {
+  color: var(--console-fix-link) !important;
+  text-decoration: none !important;
+}
+
+a[href]:not(
+  [class*="button"],
+  [class*="tabs-tab"],
+  [role="tab"],
+  [role="button"],
+  [role="menuitem"],
+  header *,
+  nav *,
+  [id^="awsc-nav"] *,
+  [class*="navigation"] *
+):hover {
+  color: var(--console-fix-link-hover) !important;
+  text-decoration: underline !important;
+}
