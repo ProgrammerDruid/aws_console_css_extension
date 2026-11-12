@@ -2,8 +2,6 @@
 // Keeps repo-only files out of the package.
 export default {
   ignoreFiles: [
-    'fonts',
-    '__fonts',
     'web-ext-config.mjs',
     'README.md',
     'LICENSE',

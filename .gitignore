@@ -1,7 +1,3 @@
-# Amazon Ember is Amazon's font - fetched locally by fetch-fonts.ps1, never committed
-fonts/
-__fonts/
-
 # web-ext build and signing output
 web-ext-artifacts/
 .amo-upload-uuid
