@@ -1,14 +1,12 @@
 /*
  * AWS Console Font Fix
  *
- * Each @font-face tries, in order:
- *   1. a copy of Amazon Ember installed on the machine
- *   2. the copy bundled in fonts/ (see fetch-fonts.ps1)
- *   3. the copy AWS hosts for its public website
+ * Each @font-face uses a copy of Amazon Ember installed on the machine
+ * if there is one, otherwise the copy AWS hosts for its public website.
  * AWS only publishes Light, Regular and Bold; italics are synthesized.
  *
  * To use a different font, change the first name in the font-family
- * rule at the bottom (for example "Segoe UI" or "Inter").
+ * rule further down (for example "Segoe UI" or "Inter").
  */
 
 @font-face {
@@ -17,7 +15,6 @@
   font-style: normal;
   font-display: swap;
   src: local("Amazon Ember Light"), local("AmazonEmber-Light"),
-    url("fonts/AmazonEmber_Lt.woff2") format("woff2"),
     url("https://a0.awsstatic.com/libra-css/fonts/amazon-ember/AmazonEmber_Lt.woff2") format("woff2");
 }
 
@@ -27,7 +24,6 @@
   font-style: normal;
   font-display: swap;
   src: local("Amazon Ember"), local("AmazonEmber-Regular"),
-    url("fonts/AmazonEmber_Rg.woff2") format("woff2"),
     url("https://a0.awsstatic.com/libra-css/fonts/amazon-ember/AmazonEmber_Rg.woff2") format("woff2");
 }
 
@@ -37,7 +33,6 @@
   font-style: normal;
   font-display: swap;
   src: local("Amazon Ember Bold"), local("AmazonEmber-Bold"),
-    url("fonts/AmazonEmber_Bd.woff2") format("woff2"),
     url("https://a0.awsstatic.com/libra-css/fonts/amazon-ember/AmazonEmber_Bd.woff2") format("woff2");
 }
 

@@ -1,56 +1,47 @@
 # AWS Console Font Fix
 
-A tiny Firefox extension that undoes the November 2026 restyle of the AWS Management Console:
+A tiny browser extension for Firefox and Chrome that undoes the November 2026 restyle of the AWS Management Console:
 
 - puts the Amazon Ember font back
 - makes links blue again, underlined only on hover
 
-It is a single stylesheet that Firefox injects on `*.console.aws.amazon.com` (and the GovCloud console) before the page paints. There is no JavaScript and it requests no permissions beyond those domains.
+It is a single stylesheet that the browser injects on `*.console.aws.amazon.com` (and the GovCloud console) before the page paints. There is no JavaScript and it requests no permissions beyond those domains. The font is loaded from AWS's own public CDN.
 
 ## Install
 
-### The quick way: signed package
+### Firefox
 
 1. Download the latest `.xpi` from the [releases page](https://github.com/ProgrammerDruid/aws_console_css_extension/releases) using Firefox
 2. Firefox asks whether to add the extension. Click **Add**
 3. Reload any open console tabs
 
-The package is signed by Mozilla, so it stays installed across restarts. It does not contain the font; it loads Amazon Ember from AWS's own CDN.
+The package is signed by Mozilla, so it stays installed across restarts.
 
-### From source
+### Chrome, Edge, Brave and other Chromium browsers
 
-```sh
-git clone https://github.com/ProgrammerDruid/aws_console_css_extension.git
-cd aws_console_css_extension
-```
+1. Get the code, either with git or with **Code > Download ZIP** on GitHub (then unzip it):
 
-Then in Firefox:
+   ```sh
+   git clone https://github.com/ProgrammerDruid/aws_console_css_extension.git
+   ```
 
-1. Open `about:debugging#/runtime/this-firefox`
-2. Click **Load Temporary Add-on...**
-3. Pick `manifest.json` from this folder
+2. Open `chrome://extensions` (`edge://extensions` in Edge)
+3. Turn on **Developer mode**
+4. Click **Load unpacked** and pick the folder that contains `manifest.json`
+5. Reload any open console tabs
+
+The extension stays installed across restarts as long as the folder stays where it is. To update, `git pull` and click the reload icon on the extension's card.
+
+### Firefox from source
+
+1. Clone the repo as above
+2. Open `about:debugging#/runtime/this-firefox`
+3. Click **Load Temporary Add-on...** and pick `manifest.json`
 4. Reload any open console tabs
 
-A temporary add-on is removed when Firefox closes. To keep it, use the signed package above or sign your own build (see below).
+A temporary add-on is removed when Firefox closes. To keep it, use the signed package or sign your own build (see below). Needs Firefox 128 or newer.
 
-### Optional: bundle the fonts locally
-
-Amazon Ember belongs to Amazon, so it is not in this repo. By default the stylesheet loads it from AWS's public CDN. If you run from source and would rather have a local copy, download it into `fonts/`:
-
-```powershell
-./fetch-fonts.ps1
-```
-
-On macOS or Linux:
-
-```sh
-mkdir -p fonts && cd fonts
-for f in Lt Rg Bd; do
-  curl -O "https://a0.awsstatic.com/libra-css/fonts/amazon-ember/AmazonEmber_$f.woff2"
-done
-```
-
-## Building and signing your own package
+## Building and signing your own Firefox package
 
 Release Firefox only installs packages signed by Mozilla. Signing an unlisted add-on is free and automated:
 
@@ -62,13 +53,13 @@ Release Firefox only installs packages signed by Mozilla. Signing an unlisted ad
    npx web-ext sign --channel=unlisted --api-key=<JWT issuer> --api-secret=<JWT secret>
    ```
 
-The signed `.xpi` lands in `web-ext-artifacts/`. `web-ext-config.mjs` keeps the fonts and repo-only files out of the package.
+The signed `.xpi` lands in `web-ext-artifacts/`. `web-ext-config.mjs` keeps repo-only files out of the package.
 
 `npx web-ext build` makes an unsigned package, which only installs on Firefox Developer Edition, Nightly or ESR with `xpinstall.signatures.required` set to `false` in `about:config`.
 
 ## Customize
 
-Everything lives in `fix.css`. After editing, click **Reload** on the extension in `about:debugging` and refresh the console tab.
+Everything lives in `fix.css`. After editing, reload the extension (the **Reload** button in `about:debugging` on Firefox, the reload icon on the extension's card on Chrome) and refresh the console tab.
 
 - **Different font:** put your font first in the `font-family` list, for example `"Segoe UI"` or `"Inter"`.
 - **Link colours:** change the `--console-fix-link` variables. There is one pair for light mode and one for dark mode.
@@ -81,6 +72,7 @@ Everything lives in `fix.css`. After editing, click **Reload** on the extension 
 - Buttons, tabs, menus and the top and side navigation are excluded from the link rule. If something turns blue that should not, add it to the second and third `:not()` lists.
 - Pages outside the console domains (sign-in, docs) are not touched. Add more patterns to `matches` in `manifest.json` if you want them.
 - The selectors are based on the console's current markup and will need updating if AWS changes it.
+- Chrome may list a warning about the `browser_specific_settings` manifest key. That key is for Firefox and the warning is harmless.
 
 ## License
 
